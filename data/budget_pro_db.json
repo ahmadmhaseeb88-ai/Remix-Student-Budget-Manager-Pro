@@ -34,8 +34,8 @@
     {
       "id": "usr_haseeb_001",
       "name": "Haseeb Ahmad",
-      "email": "haseeb@gmail.com",
-      "password_hash": "$2b$10$M6qYflvdkhLwyGhLYp02NO99jgPKDjHtlpgPvr8aZdSKpqHH4bNa.",
+      "email": "ahmadmhaseeb88@gmail.com",
+      "password_hash": "$2b$10$SejFGI1ksCj7kGy6cVx/c.daFyuWucmq9C940ae3uvQyW7GwZcMoS",
       "student_id": "MCKRU-2024-88",
       "university": "Mir Chakar Khan Rind University",
       "semester": "3rd Semester",
@@ -198,6 +198,54 @@
         "EasyPaisa"
       ],
       "created_at": "2026-10-15T07:19:25.386Z"
+    },
+    {
+      "id": "tx_hsb_cur_01_2026-11",
+      "user_id": "usr_haseeb_001",
+      "type": "income",
+      "amount": 65000,
+      "category": "Salary",
+      "description": "Monthly income & freelance payout",
+      "date": "2026-11-01",
+      "payment_method": "Bank Transfer",
+      "merchant": "Primary Income",
+      "created_at": "2026-11-25T08:59:33.722Z"
+    },
+    {
+      "id": "tx_hsb_cur_02_2026-11",
+      "user_id": "usr_haseeb_001",
+      "type": "expense",
+      "amount": 12500,
+      "category": "Hostel and rent",
+      "description": "Monthly housing & utilities share",
+      "date": "2026-11-04",
+      "payment_method": "Bank Transfer",
+      "merchant": "Utilities & Rent",
+      "created_at": "2026-11-25T08:59:33.723Z"
+    },
+    {
+      "id": "tx_hsb_cur_03_2026-11",
+      "user_id": "usr_haseeb_001",
+      "type": "expense",
+      "amount": 4800,
+      "category": "Food",
+      "description": "Groceries, tea & dining expenses",
+      "date": "2026-11-09",
+      "payment_method": "EasyPaisa",
+      "merchant": "City Mart & Cafe",
+      "created_at": "2026-11-25T08:59:33.723Z"
+    },
+    {
+      "id": "tx_hsb_cur_04_2026-11",
+      "user_id": "usr_haseeb_001",
+      "type": "expense",
+      "amount": 2200,
+      "category": "Internet and mobile",
+      "description": "Fiber broadband & 4G mobile bundle",
+      "date": "2026-11-12",
+      "payment_method": "JazzCash",
+      "merchant": "PTCL & Jazz",
+      "created_at": "2026-11-25T08:59:33.723Z"
     }
   ],
   "budgets": [
@@ -440,6 +488,186 @@
       "status": "processed",
       "ai_parsed": true,
       "created_at": "2026-10-15T07:19:00.629Z"
+    }
+  ],
+  "family_groups": [
+    {
+      "id": "fam_usr_haseeb_001",
+      "name": "Haseeb Family Hub",
+      "owner_id": "usr_haseeb_001",
+      "invite_code": "FAM-8842-PK",
+      "shared_monthly_budget": 120000,
+      "currency": "PKR",
+      "created_at": "2026-11-25T08:59:33.723Z"
+    }
+  ],
+  "family_members": [
+    {
+      "id": "fmem_usr_haseeb_001_1",
+      "family_id": "fam_usr_haseeb_001",
+      "user_id": "usr_haseeb_001",
+      "name": "Haseeb Ahmad",
+      "email": "ahmadmhaseeb88@gmail.com",
+      "relation": "Owner",
+      "role": "admin",
+      "spending_limit": 45000,
+      "status": "active",
+      "avatar_color": "bg-indigo-600",
+      "joined_at": "2026-11-25T08:59:33.723Z"
+    },
+    {
+      "id": "fmem_usr_haseeb_001_2",
+      "family_id": "fam_usr_haseeb_001",
+      "name": "Tariq Ahmad",
+      "email": "tariq.family@gmail.com",
+      "relation": "Parent",
+      "role": "admin",
+      "spending_limit": 40000,
+      "status": "active",
+      "avatar_color": "bg-emerald-600",
+      "joined_at": "2026-11-25T08:59:33.723Z"
+    },
+    {
+      "id": "fmem_usr_haseeb_001_3",
+      "family_id": "fam_usr_haseeb_001",
+      "name": "Ayesha Ahmad",
+      "email": "ayesha.family@gmail.com",
+      "relation": "Spouse",
+      "role": "contributor",
+      "spending_limit": 25000,
+      "status": "active",
+      "avatar_color": "bg-violet-600",
+      "joined_at": "2026-11-25T08:59:33.723Z"
+    },
+    {
+      "id": "fmem_usr_haseeb_001_4",
+      "family_id": "fam_usr_haseeb_001",
+      "name": "Bilal Ahmad",
+      "email": "bilal.family@gmail.com",
+      "relation": "Sibling",
+      "role": "contributor",
+      "spending_limit": 15000,
+      "status": "invited",
+      "avatar_color": "bg-amber-600",
+      "joined_at": "2026-11-25T08:59:33.723Z"
+    }
+  ],
+  "family_transactions": [
+    {
+      "id": "ftx_usr_haseeb_001_1",
+      "family_id": "fam_usr_haseeb_001",
+      "member_id": "fmem_usr_haseeb_001_1",
+      "member_name": "Haseeb Ahmad",
+      "type": "income",
+      "amount": 60000,
+      "category": "Household Pool",
+      "description": "Monthly household contribution",
+      "date": "2026-11-01",
+      "payment_method": "Bank Transfer",
+      "created_at": "2026-11-25T08:59:33.723Z"
+    },
+    {
+      "id": "ftx_usr_haseeb_001_2",
+      "family_id": "fam_usr_haseeb_001",
+      "member_id": "fmem_usr_haseeb_001_2",
+      "member_name": "Tariq Ahmad",
+      "type": "income",
+      "amount": 55000,
+      "category": "Household Pool",
+      "description": "Family monthly reserve contribution",
+      "date": "2026-11-02",
+      "payment_method": "Bank Transfer",
+      "created_at": "2026-11-25T08:59:33.723Z"
+    },
+    {
+      "id": "ftx_usr_haseeb_001_3",
+      "family_id": "fam_usr_haseeb_001",
+      "member_id": "fmem_usr_haseeb_001_3",
+      "member_name": "Ayesha Ahmad",
+      "type": "expense",
+      "amount": 18500,
+      "category": "Groceries & Mart",
+      "description": "Monthly household groceries & kitchen supplies",
+      "date": "2026-11-05",
+      "payment_method": "Debit Card",
+      "split_equally": true,
+      "created_at": "2026-11-25T08:59:33.723Z"
+    },
+    {
+      "id": "ftx_usr_haseeb_001_4",
+      "family_id": "fam_usr_haseeb_001",
+      "member_id": "fmem_usr_haseeb_001_1",
+      "member_name": "Haseeb Ahmad",
+      "type": "expense",
+      "amount": 14200,
+      "category": "Bills & Utilities",
+      "description": "Home electricity, gas & fiber internet bills",
+      "date": "2026-11-10",
+      "payment_method": "EasyPaisa",
+      "split_equally": true,
+      "created_at": "2026-11-25T08:59:33.723Z"
+    },
+    {
+      "id": "ftx_usr_haseeb_001_5",
+      "family_id": "fam_usr_haseeb_001",
+      "member_id": "fmem_usr_haseeb_001_4",
+      "member_name": "Bilal Ahmad",
+      "type": "expense",
+      "amount": 6400,
+      "category": "Transport & Fuel",
+      "description": "Family vehicle fuel & maintenance",
+      "date": "2026-11-14",
+      "payment_method": "Cash",
+      "created_at": "2026-11-25T08:59:33.723Z"
+    }
+  ],
+  "family_goals": [
+    {
+      "id": "fgl_usr_haseeb_001_1",
+      "family_id": "fam_usr_haseeb_001",
+      "title": "Family Emergency & Medical Reserve",
+      "target_amount": 300000,
+      "current_amount": 165000,
+      "target_date": "2027-06-30",
+      "contributors": [
+        {
+          "member_id": "fmem_usr_haseeb_001_1",
+          "member_name": "Haseeb Ahmad",
+          "amount": 85000
+        },
+        {
+          "member_id": "fmem_usr_haseeb_001_2",
+          "member_name": "Tariq Ahmad",
+          "amount": 60000
+        },
+        {
+          "member_id": "fmem_usr_haseeb_001_3",
+          "member_name": "Ayesha Ahmad",
+          "amount": 20000
+        }
+      ],
+      "created_at": "2026-11-25T08:59:33.723Z"
+    },
+    {
+      "id": "fgl_usr_haseeb_001_2",
+      "family_id": "fam_usr_haseeb_001",
+      "title": "Home Solar Backup System",
+      "target_amount": 250000,
+      "current_amount": 95000,
+      "target_date": "2027-04-15",
+      "contributors": [
+        {
+          "member_id": "fmem_usr_haseeb_001_2",
+          "member_name": "Tariq Ahmad",
+          "amount": 55000
+        },
+        {
+          "member_id": "fmem_usr_haseeb_001_1",
+          "member_name": "Haseeb Ahmad",
+          "amount": 40000
+        }
+      ],
+      "created_at": "2026-11-25T08:59:33.723Z"
     }
   ]
 }

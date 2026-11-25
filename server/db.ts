@@ -1,4 +1,5 @@
 import fs from 'fs';
+import os from 'os';
 import path from 'path';
 import bcrypt from 'bcryptjs';
 
@@ -205,7 +206,25 @@ export interface DatabaseSchema {
   family_goals: FamilySharedGoal[];
 }
 
-const DATA_DIR = path.resolve(process.cwd(), 'data');
+const BUNDLED_DATA_DIR = path.resolve(process.cwd(), 'data');
+const BUNDLED_DB_FILE = path.join(BUNDLED_DATA_DIR, 'budget_pro_db.json');
+
+function resolveWritableDataDir(): string {
+  if (process.env.VERCEL === '1' || process.env.VERCEL_ENV) {
+    return path.join(os.tmpdir(), 'paisatrack_data');
+  }
+  try {
+    if (!fs.existsSync(BUNDLED_DATA_DIR)) {
+      fs.mkdirSync(BUNDLED_DATA_DIR, { recursive: true });
+    }
+    fs.accessSync(BUNDLED_DATA_DIR, fs.constants.W_OK);
+    return BUNDLED_DATA_DIR;
+  } catch {
+    return path.join(os.tmpdir(), 'paisatrack_data');
+  }
+}
+
+const DATA_DIR = resolveWritableDataDir();
 const DB_FILE = path.join(DATA_DIR, 'budget_pro_db.json');
 
 class DatabaseStore {
@@ -230,8 +249,15 @@ class DatabaseStore {
   }
 
   private init() {
-    if (!fs.existsSync(DATA_DIR)) {
-      fs.mkdirSync(DATA_DIR, { recursive: true });
+    try {
+      if (!fs.existsSync(DATA_DIR)) {
+        fs.mkdirSync(DATA_DIR, { recursive: true });
+      }
+      if (DATA_DIR !== BUNDLED_DATA_DIR && !fs.existsSync(DB_FILE) && fs.existsSync(BUNDLED_DB_FILE)) {
+        fs.copyFileSync(BUNDLED_DB_FILE, DB_FILE);
+      }
+    } catch (err) {
+      console.warn('Database directory setup warning:', err);
     }
 
     if (fs.existsSync(DB_FILE)) {

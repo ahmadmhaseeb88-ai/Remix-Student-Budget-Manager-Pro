@@ -13,7 +13,11 @@ export function generateToken(user: User): string {
     {
       id: user.id,
       email: user.email,
+      name: user.name,
       role: user.role,
+      currency: user.currency,
+      plan: user.plan,
+      monthly_budget: user.monthly_budget,
     },
     JWT_SECRET,
     { expiresIn: '7d' }
@@ -28,8 +32,32 @@ export function requireAuth(req: AuthenticatedRequest, res: Response, next: Next
 
   const token = authHeader.split(' ')[1];
   try {
-    const decoded = jwt.verify(token, JWT_SECRET) as { id: string; email: string; role: string };
-    const user = db.findUserById(decoded.id);
+    const decoded = jwt.verify(token, JWT_SECRET) as {
+      id: string;
+      email: string;
+      name?: string;
+      role: 'student' | 'admin';
+      currency?: string;
+      plan?: 'free' | 'premium' | 'pro';
+      monthly_budget?: number;
+    };
+    let user = db.findUserById(decoded.id) || (decoded.email ? db.findUserByEmail(decoded.email) : undefined);
+    if (!user && decoded.id && decoded.email) {
+      // Rehydrate verified session user if serverless ephemeral storage reset on cold start
+      user = db.createUser({
+        id: decoded.id,
+        name: decoded.name || decoded.email.split('@')[0],
+        email: decoded.email.toLowerCase(),
+        password_hash: '',
+        university: 'Personal / Business',
+        semester: 'Active',
+        currency: decoded.currency || 'PKR',
+        monthly_budget: decoded.monthly_budget || 35000,
+        role: decoded.role || 'student',
+        plan: decoded.plan || 'free',
+        created_at: new Date().toISOString(),
+      });
+    }
     if (!user) {
       return res.status(401).json({ error: 'User account not found.' });
     }
