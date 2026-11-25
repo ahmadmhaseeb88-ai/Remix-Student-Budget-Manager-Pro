@@ -1,0 +1,445 @@
+{
+  "users": [
+    {
+      "id": "usr_demo_101",
+      "name": "Hamza Khan",
+      "email": "student@fast.edu.pk",
+      "password_hash": "$2b$10$zryKD1psAkeNKTBzk8.sle6Sr8ppWSZdc17aYazf89JKuF3bDneSu",
+      "student_id": "BSCS-2023-42",
+      "university": "FAST NUCES, Islamabad",
+      "semester": "5th Semester",
+      "currency": "PKR",
+      "monthly_budget": 35000,
+      "financial_goals": "Save for final year project hardware and laptop upgrade",
+      "role": "student",
+      "plan": "pro",
+      "plan_expires_at": "2027-12-31T23:59:59.000Z",
+      "created_at": "2026-10-14T06:38:58.120Z",
+      "phone_number": "+923354422540",
+      "sms_webhook_token": "student_sms_sec_9941"
+    },
+    {
+      "id": "usr_admin_001",
+      "name": "System Administrator",
+      "email": "admin@budgetpro.edu",
+      "password_hash": "$2b$10$zryKD1psAkeNKTBzk8.sleowwBMZez4y4RwNkzWwHHfNhEnISH3M2",
+      "university": "Higher Education HQ",
+      "semester": "Staff",
+      "currency": "PKR",
+      "monthly_budget": 100000,
+      "role": "admin",
+      "plan": "pro",
+      "created_at": "2026-10-14T06:38:58.120Z"
+    },
+    {
+      "id": "usr_haseeb_001",
+      "name": "Haseeb Ahmad",
+      "email": "haseeb@gmail.com",
+      "password_hash": "$2b$10$M6qYflvdkhLwyGhLYp02NO99jgPKDjHtlpgPvr8aZdSKpqHH4bNa.",
+      "student_id": "MCKRU-2024-88",
+      "university": "Mir Chakar Khan Rind University",
+      "semester": "3rd Semester",
+      "currency": "PKR",
+      "monthly_budget": 35000,
+      "financial_goals": "Save for semester fees, books, and laptop upgrades",
+      "role": "student",
+      "plan": "pro",
+      "plan_expires_at": "2027-12-31T23:59:59.000Z",
+      "phone_number": "+923001234567",
+      "sms_webhook_token": "student_sms_sec_haseeb",
+      "created_at": "2026-10-15T07:19:00.629Z"
+    }
+  ],
+  "transactions": [
+    {
+      "id": "tx_01",
+      "user_id": "usr_demo_101",
+      "type": "income",
+      "amount": 25000,
+      "category": "Pocket Money",
+      "description": "Monthly student allowance from family",
+      "date": "2026-10-01",
+      "payment_method": "Bank Transfer",
+      "merchant": "Family Transfer",
+      "created_at": "2026-10-01T09:00:00.000Z"
+    },
+    {
+      "id": "tx_02",
+      "user_id": "usr_demo_101",
+      "type": "income",
+      "amount": 15000,
+      "category": "Freelancing",
+      "description": "Frontend React UI project for client",
+      "date": "2026-10-05",
+      "payment_method": "EasyPaisa",
+      "merchant": "Upwork Client",
+      "created_at": "2026-10-05T14:30:00.000Z"
+    },
+    {
+      "id": "tx_03",
+      "user_id": "usr_demo_101",
+      "type": "expense",
+      "amount": 8500,
+      "category": "Hostel and rent",
+      "description": "Hostel shared room rent for this month",
+      "date": "2026-10-03",
+      "payment_method": "Cash",
+      "merchant": "Hostel Warden",
+      "created_at": "2026-10-03T11:00:00.000Z"
+    },
+    {
+      "id": "tx_04",
+      "user_id": "usr_demo_101",
+      "type": "expense",
+      "amount": 3200,
+      "category": "Food",
+      "description": "Campus cafeteria meals & hostel dinner mess",
+      "date": "2026-10-06",
+      "payment_method": "Cash",
+      "merchant": "FAST Campus Cafe",
+      "created_at": "2026-10-06T13:15:00.000Z"
+    },
+    {
+      "id": "tx_05",
+      "user_id": "usr_demo_101",
+      "type": "expense",
+      "amount": 2100,
+      "category": "Transport",
+      "description": "Metro bus card recharge & local commute rides",
+      "date": "2026-10-08",
+      "payment_method": "EasyPaisa",
+      "merchant": "Metro Bus Card",
+      "created_at": "2026-10-08T08:45:00.000Z"
+    },
+    {
+      "id": "tx_06",
+      "user_id": "usr_demo_101",
+      "type": "expense",
+      "amount": 1850,
+      "category": "Books and stationery",
+      "description": "Database Systems textbook & notebook prints",
+      "date": "2026-10-10",
+      "payment_method": "Cash",
+      "merchant": "Al-Huda Book Bank",
+      "created_at": "2026-10-10T16:20:00.000Z"
+    },
+    {
+      "id": "tx_07",
+      "user_id": "usr_demo_101",
+      "type": "expense",
+      "amount": 1450,
+      "category": "Internet and mobile",
+      "description": "Zong 4G monthly student data bundle",
+      "date": "2026-10-11",
+      "payment_method": "JazzCash",
+      "merchant": "Zong Telecommunications",
+      "created_at": "2026-10-11T18:00:00.000Z"
+    },
+    {
+      "id": "tx_hsb_01",
+      "user_id": "usr_haseeb_001",
+      "type": "income",
+      "amount": 30000,
+      "category": "Pocket Money",
+      "description": "Monthly student allowance from family",
+      "date": "2026-10-01",
+      "payment_method": "Bank Transfer",
+      "merchant": "Family Allowance",
+      "created_at": "2026-10-01T09:00:00.000Z"
+    },
+    {
+      "id": "tx_hsb_02",
+      "user_id": "usr_haseeb_001",
+      "type": "expense",
+      "amount": 6000,
+      "category": "Hostel and rent",
+      "description": "Hostel room & mess payment",
+      "date": "2026-10-03",
+      "payment_method": "Cash",
+      "merchant": "MCKRU Hostel Warden",
+      "created_at": "2026-10-03T11:00:00.000Z"
+    },
+    {
+      "id": "tx_hsb_03",
+      "user_id": "usr_haseeb_001",
+      "type": "expense",
+      "amount": 1800,
+      "category": "Food",
+      "description": "University cafeteria lunch & tea",
+      "date": "2026-10-06",
+      "payment_method": "EasyPaisa",
+      "merchant": "University Canteen",
+      "created_at": "2026-10-06T13:30:00.000Z"
+    },
+    {
+      "id": "tx_hsb_04",
+      "user_id": "usr_haseeb_001",
+      "type": "expense",
+      "amount": 1200,
+      "category": "Books and stationery",
+      "description": "Semester notebooks and study notes photocopying",
+      "date": "2026-10-08",
+      "payment_method": "Cash",
+      "merchant": "Campus Book Store",
+      "created_at": "2026-10-08T15:00:00.000Z"
+    },
+    {
+      "id": "tx_sms_1792048765386_l0re",
+      "user_id": "usr_haseeb_001",
+      "type": "expense",
+      "amount": 550,
+      "category": "Food",
+      "description": "Canteen lunch",
+      "date": "2026-10-15",
+      "payment_method": "EasyPaisa",
+      "merchant": "Canteen",
+      "tags": [
+        "Mobile SMS",
+        "EasyPaisa"
+      ],
+      "created_at": "2026-10-15T07:19:25.386Z"
+    }
+  ],
+  "budgets": [
+    {
+      "id": "bg_01",
+      "user_id": "usr_demo_101",
+      "category": "Overall",
+      "period": "monthly",
+      "amount": 35000,
+      "threshold_percent": 85,
+      "is_active": true,
+      "created_at": "2026-10-14T06:38:58.120Z"
+    },
+    {
+      "id": "bg_02",
+      "user_id": "usr_demo_101",
+      "category": "Food",
+      "period": "monthly",
+      "amount": 10000,
+      "threshold_percent": 80,
+      "is_active": true,
+      "created_at": "2026-10-14T06:38:58.120Z"
+    },
+    {
+      "id": "bg_03",
+      "user_id": "usr_demo_101",
+      "category": "Transport",
+      "period": "monthly",
+      "amount": 4000,
+      "threshold_percent": 75,
+      "is_active": true,
+      "created_at": "2026-10-14T06:38:58.120Z"
+    },
+    {
+      "id": "bg_04",
+      "user_id": "usr_demo_101",
+      "category": "Books and stationery",
+      "period": "monthly",
+      "amount": 3000,
+      "threshold_percent": 80,
+      "is_active": true,
+      "created_at": "2026-10-14T06:38:58.120Z"
+    },
+    {
+      "id": "bg_hsb_01",
+      "user_id": "usr_haseeb_001",
+      "category": "Overall",
+      "period": "monthly",
+      "amount": 35000,
+      "threshold_percent": 85,
+      "is_active": true,
+      "created_at": "2026-10-15T07:19:00.629Z"
+    },
+    {
+      "id": "bg_hsb_02",
+      "user_id": "usr_haseeb_001",
+      "category": "Food",
+      "period": "monthly",
+      "amount": 15000,
+      "threshold_percent": 80,
+      "is_active": true,
+      "created_at": "2026-10-15T07:19:00.629Z"
+    },
+    {
+      "id": "bg_hsb_03",
+      "user_id": "usr_haseeb_001",
+      "category": "Hostel and rent",
+      "period": "monthly",
+      "amount": 8000,
+      "threshold_percent": 85,
+      "is_active": true,
+      "created_at": "2026-10-15T07:19:00.629Z"
+    }
+  ],
+  "goals": [
+    {
+      "id": "gl_01",
+      "user_id": "usr_demo_101",
+      "title": "M2 MacBook Pro / High-End Laptop for FYP",
+      "target_amount": 160000,
+      "current_amount": 45000,
+      "target_date": "2026-12-25",
+      "priority": "high",
+      "notes": "Required for deep learning senior year project simulations",
+      "status": "active",
+      "created_at": "2026-10-14T06:38:58.120Z"
+    },
+    {
+      "id": "gl_02",
+      "user_id": "usr_demo_101",
+      "title": "Cloud Certification Exam Voucher",
+      "target_amount": 25000,
+      "current_amount": 18000,
+      "target_date": "2026-10-30",
+      "priority": "medium",
+      "notes": "AWS Certified Solutions Architect voucher with student discount",
+      "status": "active",
+      "created_at": "2026-10-14T06:38:58.120Z"
+    },
+    {
+      "id": "gl_03",
+      "user_id": "usr_demo_101",
+      "title": "Semester Emergency Fund",
+      "target_amount": 20000,
+      "current_amount": 20000,
+      "target_date": "2026-09-01",
+      "priority": "high",
+      "notes": "Emergency reserve for medical or urgent travel",
+      "status": "completed",
+      "created_at": "2026-10-14T06:38:58.120Z"
+    },
+    {
+      "id": "gl_hsb_01",
+      "user_id": "usr_haseeb_001",
+      "title": "Laptop Upgrade for University Coursework",
+      "target_amount": 85000,
+      "current_amount": 25000,
+      "target_date": "2026-12-30",
+      "priority": "high",
+      "status": "active",
+      "notes": "Mir Chakar Khan Rind University CS Lab simulations",
+      "created_at": "2026-10-15T07:19:00.629Z"
+    }
+  ],
+  "bills": [
+    {
+      "id": "bl_01",
+      "user_id": "usr_demo_101",
+      "title": "Hostel Mess & Room Rent",
+      "amount": 8500,
+      "category": "Hostel and rent",
+      "due_date": "2026-10-28",
+      "recurring_frequency": "monthly",
+      "is_paid": false,
+      "reminder_days_before": 3,
+      "created_at": "2026-10-14T06:38:58.120Z"
+    },
+    {
+      "id": "bl_02",
+      "user_id": "usr_demo_101",
+      "title": "University Midterm Exam Fee",
+      "amount": 3500,
+      "category": "University fees",
+      "due_date": "2026-10-22",
+      "recurring_frequency": "semester",
+      "is_paid": false,
+      "reminder_days_before": 5,
+      "created_at": "2026-10-14T06:38:58.120Z"
+    },
+    {
+      "id": "bl_03",
+      "user_id": "usr_demo_101",
+      "title": "Hostel WiFi / Shared Fiber Fiberlink",
+      "amount": 1200,
+      "category": "Internet and mobile",
+      "due_date": "2026-10-15",
+      "recurring_frequency": "monthly",
+      "is_paid": true,
+      "last_paid_at": "2026-10-14",
+      "reminder_days_before": 2,
+      "created_at": "2026-10-14T06:38:58.120Z"
+    }
+  ],
+  "semester_plans": [
+    {
+      "id": "sp_01",
+      "user_id": "usr_demo_101",
+      "semester_name": "Fall 2026 Semester",
+      "start_date": "2026-09-01",
+      "end_date": "2027-01-31",
+      "expected_monthly_allowance": 25000,
+      "scholarship_salary": 15000,
+      "tuition_exam_fee": 75000,
+      "hostel_rent": 42500,
+      "food_transport_est": 55000,
+      "books_materials": 12000,
+      "other_expenses": 8000,
+      "notes": "Planning for 5 months duration. Aiming for 20% savings margin.",
+      "created_at": "2026-10-14T06:38:58.121Z"
+    }
+  ],
+  "receipts": [],
+  "subscriptions": [
+    {
+      "id": "sub_01",
+      "user_id": "usr_demo_101",
+      "plan": "pro",
+      "amount_pkr": 299,
+      "billing_cycle": "monthly",
+      "status": "active",
+      "payment_method": "EasyPaisa",
+      "reference_no": "EP-98234710",
+      "created_at": "2026-10-14T06:38:58.121Z",
+      "expires_at": "2027-12-31T23:59:59.000Z"
+    }
+  ],
+  "sms_logs": [
+    {
+      "id": "sms_1792048775113_a1ua",
+      "user_id": "usr_haseeb_001",
+      "sender_number": "+923001234567",
+      "raw_text": "Budget Food 15000",
+      "parsed_type": "budget",
+      "parsed_amount": 15000,
+      "parsed_category": "Food",
+      "parsed_description": "Budget configured for Food: PKR 15000",
+      "payment_method": "Cash",
+      "status": "processed",
+      "budget_id": "bg_hsb_02",
+      "ai_parsed": false,
+      "notes": "Rule-based financial parser engine",
+      "created_at": "2026-10-15T07:19:35.113Z"
+    },
+    {
+      "id": "sms_1792048765386_l7uc",
+      "user_id": "usr_haseeb_001",
+      "sender_number": "+923001234567",
+      "raw_text": "Paid Rs. 550 canteen lunch via EasyPaisa",
+      "parsed_type": "expense",
+      "parsed_amount": 550,
+      "parsed_category": "Food",
+      "parsed_description": "Canteen lunch",
+      "payment_method": "EasyPaisa",
+      "status": "processed",
+      "transaction_id": "tx_sms_1792048765386_l0re",
+      "ai_parsed": true,
+      "notes": "AI Parsed via Gemini 3.8 Flash",
+      "created_at": "2026-10-15T07:19:25.386Z"
+    },
+    {
+      "id": "sms_hsb_01",
+      "user_id": "usr_haseeb_001",
+      "sender_number": "+923001234567",
+      "raw_text": "Payment of Rs. 450 to University Canteen was successful on EasyPaisa",
+      "parsed_type": "expense",
+      "parsed_amount": 450,
+      "parsed_category": "Food",
+      "parsed_description": "University Canteen (Food)",
+      "payment_method": "EasyPaisa",
+      "status": "processed",
+      "ai_parsed": true,
+      "created_at": "2026-10-15T07:19:00.629Z"
+    }
+  ]
+}

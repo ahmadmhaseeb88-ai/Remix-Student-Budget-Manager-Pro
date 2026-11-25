@@ -1,0 +1,8 @@
+{
+  "name": "Remix Student Budget Manager Pro",
+  "description": "Smart, production-oriented student personal finance and budgeting platform with AI Money Coach, CamScanner receipt scanner, semester planner, and savings goals.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
