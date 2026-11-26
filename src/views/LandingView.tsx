@@ -86,49 +86,22 @@ export const LandingView: React.FC<LandingViewProps> = ({
             : 'کوئی بھی صارف (ملازمت پیشہ، فری لانسر، کاروباری افراد یا گھریلو صارفین) آمدنی و اخراجات کا حساب کتاب باآسانی رکھ سکتے ہیں بمع AI مالیاتی مشیر۔'}
         </p>
 
-        {/* Featured Test Account Card: Ahmad Haseeb */}
-        <div className="mt-7 max-w-md mx-auto p-4 rounded-3xl bg-white border border-slate-200/90 shadow-sm flex items-center justify-between text-left">
-          <div className="flex items-center gap-3">
-            <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-emerald-600 to-teal-700 text-white font-black text-sm flex items-center justify-center shrink-0 shadow-xs">
-              AH
-            </div>
-            <div className="min-w-0">
-              <div className="text-xs font-bold text-slate-900 flex items-center gap-1.5">
-                <span>Ahmad Haseeb</span>
-                <span className="text-[10px] bg-emerald-100 text-emerald-800 font-semibold px-2 py-0.5 rounded-full">
-                  {isEn ? 'Verified Account' : 'تصدیق شدہ'}
-                </span>
-              </div>
-              <div className="text-[11px] text-slate-500 font-mono mt-0.5 truncate">
-                ahmadmhaseeb88@gmail.com
-              </div>
-            </div>
-          </div>
-          <button
-            onClick={onExploreDemo}
-            className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-xs transition-colors shrink-0 flex items-center gap-1 active:scale-95"
-          >
-            <span>{isEn ? '1-Click Login' : '1-کلک لاگ ان'}</span>
-            <ArrowRight className="w-3.5 h-3.5" />
-          </button>
-        </div>
-
         {/* CTA Button Group */}
-        <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3">
+        <div className="mt-7 flex flex-col sm:flex-row items-center justify-center gap-3">
           <button
             onClick={() => onOpenAuth('register')}
             className="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 text-white font-black text-sm px-6 py-3.5 rounded-2xl shadow-md shadow-emerald-600/20 active:scale-95 transition-all flex items-center justify-center gap-2"
           >
-            <span>{isEn ? 'Get Started Free' : 'مفت نیا کھاتہ بنائیں'}</span>
+            <span>{isEn ? 'Create Free Account' : 'مفت نیا کھاتہ بنائیں'}</span>
             <ArrowRight className="w-4 h-4" />
           </button>
 
           <button
-            onClick={onExploreDemo}
+            onClick={() => onOpenAuth('login')}
             className="w-full sm:w-auto bg-white border border-slate-200 hover:bg-slate-50 text-slate-800 font-bold text-sm px-6 py-3.5 rounded-2xl shadow-xs transition-all flex items-center justify-center gap-2"
           >
-            <Sparkles className="w-4 h-4 text-emerald-600" />
-            <span>{isEn ? 'Launch Live Demo' : 'لائیو ڈیمو کھولیں'}</span>
+            <ShieldCheck className="w-4 h-4 text-emerald-600" />
+            <span>{isEn ? 'Sign In to Your Account' : 'اپنے اکاؤنٹ میں لاگ ان کریں'}</span>
           </button>
         </div>
 
@@ -295,10 +268,10 @@ export const LandingView: React.FC<LandingViewProps> = ({
             {isEn ? 'Create Free Account' : 'نیا فری اکاؤنٹ بنائیں'}
           </button>
           <button
-            onClick={onExploreDemo}
+            onClick={() => onOpenAuth('login')}
             className="w-full sm:w-auto bg-white/10 hover:bg-white/20 text-white font-bold text-xs sm:text-sm px-6 py-3.5 rounded-2xl transition-all border border-white/15 active:scale-95"
           >
-            {isEn ? 'Open Demo with Ahmad Haseeb' : 'ڈیمو اکاؤنٹ کھولیں'}
+            {isEn ? 'Sign In to Account' : 'اپنے اکاؤنٹ میں لاگ ان کریں'}
           </button>
         </div>
       </section>

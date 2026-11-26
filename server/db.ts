@@ -315,7 +315,7 @@ class DatabaseStore {
             currency: 'PKR',
             monthly_budget: 35000,
             financial_goals: 'Save for investments, business, and tech upgrades',
-            role: 'student',
+            role: 'admin',
             plan: 'pro',
             plan_expires_at: '2027-12-31T23:59:59.000Z',
             phone_number: '+923001234567',
@@ -447,9 +447,12 @@ class DatabaseStore {
           this.persist();
         } else {
           haseeb.email = 'ahmadmhaseeb88@gmail.com';
-          haseeb.password_hash = haseebHash;
-          haseeb.name = 'Haseeb Ahmad';
-          haseeb.university = 'Mir Chakar Khan Rind University';
+          if (!haseeb.password_hash) {
+            haseeb.password_hash = haseebHash;
+          }
+          haseeb.role = 'admin';
+          haseeb.name = haseeb.name || 'Haseeb Ahmad';
+          haseeb.university = haseeb.university || 'Mir Chakar Khan Rind University';
           if (!haseeb.student_id) haseeb.student_id = 'MCKRU-2024-88';
           if (!haseeb.sms_webhook_token) haseeb.sms_webhook_token = 'student_sms_sec_haseeb';
           if (!haseeb.phone_number) haseeb.phone_number = '+923001234567';
@@ -554,7 +557,7 @@ class DatabaseStore {
       currency: 'PKR',
       monthly_budget: 35000,
       financial_goals: 'Save for semester fees and laptop upgrades',
-      role: 'student',
+      role: 'admin',
       plan: 'pro',
       plan_expires_at: '2027-12-31T23:59:59.000Z',
       phone_number: '+923001234567',

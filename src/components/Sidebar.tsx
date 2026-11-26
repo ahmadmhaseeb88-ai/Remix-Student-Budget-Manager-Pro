@@ -102,8 +102,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeView, onNavigate, user }
     },
   ];
 
-  const isAdminOrOwner =
-    user.role === 'admin' || user.email?.toLowerCase().trim() === 'ahmadmhaseeb88@gmail.com';
+  const isAdminOrOwner = user.role === 'admin';
 
   if (isAdminOrOwner) {
     navItems.push({
@@ -125,7 +124,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeView, onNavigate, user }
           </div>
           <div className="min-w-0 flex-1">
             <div className="text-xs font-bold text-slate-900 truncate">{user.name}</div>
-            <div className="text-[11px] text-slate-500 truncate">{user.email || 'ahmadmhaseeb88@gmail.com'}</div>
+            <div className="text-[11px] text-slate-500 truncate">{user.email || ''}</div>
           </div>
         </div>
 

@@ -195,9 +195,8 @@ apiRouter.post('/auth/forgot-password', (req, res) => {
     });
   }
 
-  // Simulated token for development
   return res.json({
-    message: `A password reset link has been dispatched to ${email}. (Development note: for quick testing, use password 'student123' for the demo account or register a fresh account).`,
+    message: 'If an account exists with this email, password reset instructions have been generated.',
   });
 });
 

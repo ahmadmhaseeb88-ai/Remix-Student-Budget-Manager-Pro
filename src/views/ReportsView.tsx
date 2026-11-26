@@ -597,7 +597,7 @@ Official ledger verified via PaisaTrack AI Wealth Platform.`;
                         <div>
                           <span className="text-[10px] uppercase text-slate-400 font-bold block">Email Address</span>
                           <span className="font-mono text-slate-800 font-semibold text-[11px] truncate block" title={user.email}>
-                            {user.email || 'ahmadmhaseeb88@gmail.com'}
+                            {user.email || ''}
                           </span>
                         </div>
                         <div>

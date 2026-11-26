@@ -127,7 +127,8 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   };
 
   const handleCopyId = () => {
-    navigator.clipboard.writeText(user.email || 'ahmadmhaseeb88@gmail.com');
+    if (!user.email) return;
+    navigator.clipboard.writeText(user.email);
     setCopiedId(true);
     setTimeout(() => setCopiedId(false), 2000);
   };
@@ -404,7 +405,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             </div>
           </div>
 
-          {(user.role === 'admin' || user.email?.toLowerCase().trim() === 'ahmadmhaseeb88@gmail.com') && (
+          {user.role === 'admin' && (
             <button
               onClick={() => onNavigate('admin')}
               className="text-xs font-bold text-indigo-600 hover:text-indigo-800 flex items-center gap-1"
@@ -713,7 +714,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                     {user.name}
                   </h2>
                   <div className="text-xs text-slate-300 font-medium">
-                    {user.email || 'ahmadmhaseeb88@gmail.com'}
+                    {user.email || ''}
                   </div>
                 </div>
               </div>
@@ -731,7 +732,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                   <span className="text-[10px] text-slate-400 block font-mono">PRIMARY EMAIL</span>
                   <div className="flex items-center gap-1 mt-0.5">
                     <span className="font-mono font-semibold text-slate-200 truncate text-[11px]" title={user.email}>
-                      {user.email || 'ahmadmhaseeb88@gmail.com'}
+                      {user.email || ''}
                     </span>
                     <button
                       onClick={handleCopyId}

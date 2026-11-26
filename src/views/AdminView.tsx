@@ -24,8 +24,7 @@ export const AdminView: React.FC<AdminViewProps> = ({ user }) => {
   const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
 
-  const isOwnerOrAdmin =
-    user.role === 'admin' || user.email?.toLowerCase().trim() === 'ahmadmhaseeb88@gmail.com';
+  const isOwnerOrAdmin = user.role === 'admin';
 
   const fetchAdminStats = async () => {
     setLoading(true);

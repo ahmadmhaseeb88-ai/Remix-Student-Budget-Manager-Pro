@@ -127,32 +127,8 @@ export default function App() {
     setAuthModalOpen(true);
   };
 
-  const handleExploreDemo = async () => {
-    try {
-      const res = await api.login({
-        email: 'ahmadmhaseeb88@gmail.com',
-        password: '11223344',
-      });
-      handleAuthSuccess(res.user);
-    } catch {
-      try {
-        const res2 = await api.login({
-          email: 'haseeb@gmail.com',
-          password: '11223344',
-        });
-        handleAuthSuccess(res2.user);
-      } catch {
-        try {
-          const res3 = await api.login({
-            email: 'student@fast.edu.pk',
-            password: 'student123',
-          });
-          handleAuthSuccess(res3.user);
-        } catch {
-          handleOpenAuth('login');
-        }
-      }
-    }
+  const handleExploreDemo = () => {
+    handleOpenAuth('login');
   };
 
   const handleOpenQuickAdd = (type: 'expense' | 'income' = 'expense', prefill?: Partial<Transaction>) => {

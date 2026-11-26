@@ -22,9 +22,9 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
-  // Login form default to Haseeb Ahmad
-  const [loginEmail, setLoginEmail] = useState('ahmadmhaseeb88@gmail.com');
-  const [loginPassword, setLoginPassword] = useState('11223344');
+  // Login form starts clean so each user logs into their own private account
+  const [loginEmail, setLoginEmail] = useState('');
+  const [loginPassword, setLoginPassword] = useState('');
 
   // Register Onboarding Steps (1 to 2 — clean & universal for any new Gmail user)
   const [step, setStep] = useState(1);
@@ -45,6 +45,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
       setStep(1);
       setError(null);
       setSuccessMessage(null);
+      setLoginPassword('');
     }
   }, [isOpen, initialMode]);
 
@@ -69,18 +70,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     }
   };
 
-  const handleFillDemo = (type: 'haseeb' | 'student' | 'admin') => {
-    if (type === 'haseeb') {
-      setLoginEmail('ahmadmhaseeb88@gmail.com');
-      setLoginPassword('11223344');
-    } else if (type === 'student') {
-      setLoginEmail('student@fast.edu.pk');
-      setLoginPassword('student123');
-    } else {
-      setLoginEmail('admin@budgetpro.edu');
-      setLoginPassword('admin123');
-    }
-  };
+
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -192,44 +182,6 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 <p className="text-xs text-slate-500 mt-1">
                   Access your real-time cashflow, income & expense ledger, family sharing, and AI advisor.
                 </p>
-              </div>
-
-              {/* Fast 1-Click Demo Buttons */}
-              <div className="mb-4 p-3 rounded-xl bg-indigo-50/70 border border-indigo-100">
-                <div className="flex items-center justify-between text-xs font-semibold text-indigo-900 mb-2">
-                  <span className="flex items-center gap-1.5">
-                    <Sparkles className="w-3.5 h-3.5 text-indigo-600" />
-                    Quick 1-Click Login:
-                  </span>
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-                  <button
-                    type="button"
-                    onClick={() => handleFillDemo('haseeb')}
-                    className="text-left p-2 rounded-lg bg-white border border-emerald-300 hover:border-emerald-500 text-xs text-slate-700 transition-all shadow-xs"
-                  >
-                    <div className="font-bold text-emerald-800">Ahmad Haseeb</div>
-                    <div className="text-[10px] text-slate-500 font-mono truncate">ahmadmhaseeb88@gmail.com</div>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => handleFillDemo('student')}
-                    className="text-left p-2 rounded-lg bg-white border border-indigo-200/60 hover:border-indigo-400 text-xs text-slate-700 transition-all shadow-xs"
-                  >
-                    <div className="font-bold text-indigo-700">Hamza Khan</div>
-                    <div className="text-[10px] text-slate-400 truncate">student@fast.edu.pk</div>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => handleFillDemo('admin')}
-                    className="text-left p-2 rounded-lg bg-white border border-indigo-200/60 hover:border-indigo-400 text-xs text-slate-700 transition-all shadow-xs"
-                  >
-                    <div className="font-bold text-slate-800">Admin</div>
-                    <div className="text-[10px] text-slate-400 truncate">admin@budgetpro.edu</div>
-                  </button>
-                </div>
               </div>
 
               <form onSubmit={handleLogin} className="space-y-3.5">
