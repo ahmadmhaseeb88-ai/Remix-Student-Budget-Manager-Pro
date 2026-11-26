@@ -1154,8 +1154,17 @@ const PLANS_CONFIG = [
   },
 ];
 
+const EASYPAISA_RECEIVER_CONFIG = {
+  method: 'EasyPaisa',
+  accountNumber: process.env.EASYPAISA_RECEIVER_NUMBER || '03707481051',
+  accountTitle: process.env.EASYPAISA_ACCOUNT_TITLE || 'PaisaTrack AI Official',
+};
+
 apiRouter.get('/subscriptions/plans', (_req, res) => {
-  return res.json({ plans: PLANS_CONFIG });
+  return res.json({
+    plans: PLANS_CONFIG,
+    paymentReceiver: EASYPAISA_RECEIVER_CONFIG,
+  });
 });
 
 apiRouter.get('/subscriptions/current', requireAuth, (req: AuthenticatedRequest, res: Response) => {
@@ -1168,12 +1177,13 @@ apiRouter.get('/subscriptions/current', requireAuth, (req: AuthenticatedRequest,
     planId: user.plan,
     expiresAt: user.plan_expires_at,
     history,
+    paymentReceiver: EASYPAISA_RECEIVER_CONFIG,
   });
 });
 
-// Payment Adapter Simulation (JazzCash, EasyPaisa, Debit Card)
+// Real EasyPaisa Transfer + TID Verification Flow
 apiRouter.post('/subscriptions/upgrade', requireAuth, (req: AuthenticatedRequest, res: Response) => {
-  const { plan_id, payment_method, mobile_or_card_no } = req.body;
+  const { plan_id, payment_method, mobile_or_card_no, transaction_tid } = req.body;
 
   const targetPlan = PLANS_CONFIG.find((p) => p.id === plan_id);
   if (!targetPlan || targetPlan.id === 'free') {
@@ -1181,33 +1191,65 @@ apiRouter.post('/subscriptions/upgrade', requireAuth, (req: AuthenticatedRequest
   }
 
   if (!payment_method) {
-    return res.status(400).json({ error: 'Payment method is required (EasyPaisa, JazzCash, Card).' });
+    return res.status(400).json({ error: 'Payment method is required (EasyPaisa, JazzCash, Bank Transfer).' });
   }
 
-  // Create simulated transaction reference
-  const refCode = `${payment_method.toUpperCase().slice(0, 2)}-${Math.floor(10000000 + Math.random() * 90000000)}`;
+  const senderClean = String(mobile_or_card_no || '').trim();
+  if (senderClean.length < 10) {
+    return res.status(400).json({ error: 'Please enter a valid sender EasyPaisa/mobile or account number.' });
+  }
+
+  const cleanTid = String(transaction_tid || '').trim().toUpperCase();
+  if (!/^[A-Z0-9-]{6,32}$/.test(cleanTid)) {
+    return res.status(400).json({
+      error: 'Please enter the valid EasyPaisa Transaction ID (TID) from your payment receipt (6-32 alphanumeric characters).',
+    });
+  }
+
+  if (db.findSubscriptionByTid(cleanTid)) {
+    return res.status(400).json({
+      error: `Transaction ID (TID) ${cleanTid} has already been submitted. Please use a unique EasyPaisa TID.`,
+    });
+  }
+
+  const matchedSms = db.matchEasyPaisaSmsForTid(cleanTid, targetPlan.price_pkr);
   const expires = new Date();
   expires.setMonth(expires.getMonth() + 1);
 
   const subRecord: SubscriptionRecord = {
-    id: `sub_${Date.now()}`,
+    id: `sub_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
     user_id: req.user!.id,
     plan: targetPlan.id as 'premium' | 'pro',
     amount_pkr: targetPlan.price_pkr,
     billing_cycle: 'monthly',
-    status: 'active',
-    payment_method: `${payment_method} (${mobile_or_card_no || 'Verified'})`,
-    reference_no: refCode,
+    status: matchedSms ? 'active' : 'pending',
+    payment_method: `${payment_method} (${senderClean})`,
+    reference_no: cleanTid,
+    sender_number: senderClean,
+    receiver_number: EASYPAISA_RECEIVER_CONFIG.accountNumber,
+    transaction_tid: cleanTid,
+    verified_by: matchedSms ? 'auto-sms-sync' : undefined,
+    verified_at: matchedSms ? new Date().toISOString() : undefined,
     created_at: new Date().toISOString(),
     expires_at: expires.toISOString(),
   };
 
   db.recordSubscription(subRecord);
 
-  return res.json({
+  if (matchedSms) {
+    return res.json({
+      success: true,
+      pending: false,
+      subscription: subRecord,
+      message: `EasyPaisa TID ${cleanTid} verified automatically via SMS sync! Your account is now upgraded to ${targetPlan.name}.`,
+    });
+  }
+
+  return res.status(202).json({
     success: true,
+    pending: true,
     subscription: subRecord,
-    message: `Payment of Rs ${targetPlan.price_pkr} confirmed via ${payment_method}! Your account is now upgraded to ${targetPlan.name}.`,
+    message: `Payment proof submitted (TID: ${cleanTid}) for Rs ${targetPlan.price_pkr} sent to EasyPaisa ${EASYPAISA_RECEIVER_CONFIG.accountNumber}. Your plan will activate once verified by the owner.`,
   });
 });
 
@@ -1221,8 +1263,10 @@ apiRouter.get('/stats/usage', (_req, res: Response) => {
 
 apiRouter.get('/admin/stats', requireAdmin, (req: AuthenticatedRequest, res: Response) => {
   const stats = db.getSystemStats();
-  const allUsers = db
-    .getAllUsers()
+  const rawUsers = db.getAllUsers();
+  const userMap = new Map(rawUsers.map((u) => [u.id, u]));
+
+  const allUsers = rawUsers
     .map((u) => {
       const { password_hash: _, ...safe } = u;
       return safe;
@@ -1233,15 +1277,50 @@ apiRouter.get('/admin/stats', requireAdmin, (req: AuthenticatedRequest, res: Res
       return tb - ta;
     });
 
+  const subscriptionRequests = db.getAllSubscriptions().map((s) => {
+    const owner = userMap.get(s.user_id);
+    return {
+      ...s,
+      user_name: owner?.name || 'Unknown User',
+      user_email: owner?.email || '',
+    };
+  });
+
   return res.json({
     stats,
     users: allUsers,
+    subscriptions: subscriptionRequests,
+    paymentReceiver: EASYPAISA_RECEIVER_CONFIG,
     system: {
       node_version: process.version,
       platform: process.platform,
       database: 'Relational Store / MySQL XAMPP Ready',
       status: 'Healthy & Operational',
     },
+  });
+});
+
+apiRouter.post('/admin/subscriptions/:subId/approve', requireAdmin, (req: AuthenticatedRequest, res: Response) => {
+  const updated = db.approveSubscription(req.params.subId, req.user!.email);
+  if (!updated) {
+    return res.status(404).json({ error: 'Payment submission not found.' });
+  }
+  return res.json({
+    success: true,
+    subscription: updated,
+    message: `Approved TID ${updated.transaction_tid || updated.reference_no} and activated ${updated.plan.toUpperCase()} plan.`,
+  });
+});
+
+apiRouter.post('/admin/subscriptions/:subId/reject', requireAdmin, (req: AuthenticatedRequest, res: Response) => {
+  const updated = db.rejectSubscription(req.params.subId, req.user!.email);
+  if (!updated) {
+    return res.status(404).json({ error: 'Payment submission not found.' });
+  }
+  return res.json({
+    success: true,
+    subscription: updated,
+    message: `Rejected payment submission ${updated.transaction_tid || updated.reference_no}.`,
   });
 });
 

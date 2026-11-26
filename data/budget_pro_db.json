@@ -30,7 +30,8 @@
       "monthly_budget": 100000,
       "role": "admin",
       "plan": "pro",
-      "created_at": "2026-10-14T06:38:58.120Z"
+      "created_at": "2026-10-14T06:38:58.120Z",
+      "last_active_at": "2026-11-26T09:13:11.826Z"
     },
     {
       "id": "usr_haseeb_001",

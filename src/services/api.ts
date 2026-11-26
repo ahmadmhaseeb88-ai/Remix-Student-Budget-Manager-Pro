@@ -364,8 +364,14 @@ export const api = {
   },
 
   // Subscriptions
-  async getSubscriptionPlans(): Promise<{ plans: SubscriptionPlan[] }> {
-    return this.request<{ plans: SubscriptionPlan[] }>('/subscriptions/plans');
+  async getSubscriptionPlans(): Promise<{
+    plans: SubscriptionPlan[];
+    paymentReceiver?: { method: string; accountNumber: string; accountTitle: string };
+  }> {
+    return this.request<{
+      plans: SubscriptionPlan[];
+      paymentReceiver?: { method: string; accountNumber: string; accountTitle: string };
+    }>('/subscriptions/plans');
   },
 
   async getCurrentSubscription(): Promise<any> {
@@ -376,6 +382,7 @@ export const api = {
     plan_id: string;
     payment_method: string;
     mobile_or_card_no?: string;
+    transaction_tid?: string;
   }): Promise<any> {
     return this.request<any>('/subscriptions/upgrade', {
       method: 'POST',
@@ -390,6 +397,18 @@ export const api = {
 
   async getAdminStats(): Promise<any> {
     return this.request<any>('/admin/stats');
+  },
+
+  async approveSubscription(subId: string): Promise<any> {
+    return this.request<any>(`/admin/subscriptions/${subId}/approve`, {
+      method: 'POST',
+    });
+  },
+
+  async rejectSubscription(subId: string): Promise<any> {
+    return this.request<any>(`/admin/subscriptions/${subId}/reject`, {
+      method: 'POST',
+    });
   },
 
   // Mobile SMS Sync & Automation

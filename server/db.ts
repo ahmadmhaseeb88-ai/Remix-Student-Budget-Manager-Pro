@@ -116,9 +116,14 @@ export interface SubscriptionRecord {
   plan: 'free' | 'premium' | 'pro';
   amount_pkr: number;
   billing_cycle: 'monthly' | 'annual';
-  status: 'active' | 'expired' | 'cancelled';
+  status: 'active' | 'pending' | 'rejected' | 'expired' | 'cancelled';
   payment_method: string;
   reference_no: string;
+  sender_number?: string;
+  receiver_number?: string;
+  transaction_tid?: string;
+  verified_by?: string;
+  verified_at?: string;
   created_at: string;
   expires_at: string;
 }
@@ -1284,15 +1289,83 @@ class DatabaseStore {
       .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
   }
 
+  public getAllSubscriptions(): SubscriptionRecord[] {
+    return [...this.data.subscriptions].sort(
+      (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+    );
+  }
+
+  public findSubscriptionByTid(tid: string): SubscriptionRecord | undefined {
+    const norm = String(tid || '').trim().toUpperCase();
+    if (!norm) return undefined;
+    return this.data.subscriptions.find(
+      (s) =>
+        s.status !== 'rejected' &&
+        (String(s.transaction_tid || '').trim().toUpperCase() === norm ||
+          String(s.reference_no || '').trim().toUpperCase() === norm)
+    );
+  }
+
+  public matchEasyPaisaSmsForTid(tid: string, minAmountPkr: number): boolean {
+    const normTid = String(tid || '').trim().toLowerCase();
+    if (!normTid || !this.data.sms_logs) return false;
+    const adminIds = new Set(this.data.users.filter((u) => u.role === 'admin').map((u) => u.id));
+    return this.data.sms_logs.some((log) => {
+      if (!adminIds.has(log.user_id)) return false;
+      const text = String(log.raw_text || '').toLowerCase();
+      const hasTid = text.includes(normTid);
+      const isIncoming =
+        log.parsed_type === 'income' ||
+        text.includes('received') ||
+        text.includes('credited') ||
+        text.includes('deposited');
+      const amountOk = log.parsed_amount >= minAmountPkr;
+      return hasTid && isIncoming && amountOk;
+    });
+  }
+
   public recordSubscription(sub: SubscriptionRecord): SubscriptionRecord {
     this.data.subscriptions.push(sub);
-    // Update user plan
-    const user = this.findUserById(sub.user_id);
-    if (user) {
-      user.plan = sub.plan;
-      user.plan_expires_at = sub.expires_at;
-      this.updateUser(user.id, { plan: sub.plan, plan_expires_at: sub.expires_at });
+    // Only upgrade user plan once payment status is verified/active
+    if (sub.status === 'active') {
+      const user = this.findUserById(sub.user_id);
+      if (user) {
+        user.plan = sub.plan;
+        user.plan_expires_at = sub.expires_at;
+        this.updateUser(user.id, { plan: sub.plan, plan_expires_at: sub.expires_at });
+      }
     }
+    this.persist();
+    return sub;
+  }
+
+  public approveSubscription(subId: string, verifiedBy: string): SubscriptionRecord | undefined {
+    const idx = this.data.subscriptions.findIndex((s) => s.id === subId);
+    if (idx === -1) return undefined;
+    const sub = this.data.subscriptions[idx];
+    const expires = new Date();
+    expires.setMonth(expires.getMonth() + 1);
+    sub.status = 'active';
+    sub.verified_by = verifiedBy;
+    sub.verified_at = new Date().toISOString();
+    sub.expires_at = expires.toISOString();
+
+    const userIdx = this.data.users.findIndex((u) => u.id === sub.user_id);
+    if (userIdx !== -1) {
+      this.data.users[userIdx].plan = sub.plan;
+      this.data.users[userIdx].plan_expires_at = expires.toISOString();
+    }
+    this.persist();
+    return sub;
+  }
+
+  public rejectSubscription(subId: string, verifiedBy: string): SubscriptionRecord | undefined {
+    const idx = this.data.subscriptions.findIndex((s) => s.id === subId);
+    if (idx === -1) return undefined;
+    const sub = this.data.subscriptions[idx];
+    sub.status = 'rejected';
+    sub.verified_by = verifiedBy;
+    sub.verified_at = new Date().toISOString();
     this.persist();
     return sub;
   }
