@@ -78,6 +78,7 @@ apiRouter.post('/auth/register', (req, res) => {
     financial_goals: financial_goals ? String(financial_goals).trim() : undefined,
     role: 'student',
     plan: 'free',
+    last_active_at: new Date().toISOString(),
     created_at: new Date().toISOString(),
   };
 
@@ -117,6 +118,7 @@ apiRouter.post('/auth/login', (req, res) => {
     return res.status(401).json({ error: 'Invalid email address or password.' });
   }
 
+  db.touchUserActivity(user.id);
   const token = generateToken(user);
   const { password_hash: _, ...safeUser } = user;
   return res.json({ token, user: safeUser, message: 'Welcome back!' });
@@ -1211,15 +1213,26 @@ apiRouter.post('/subscriptions/upgrade', requireAuth, (req: AuthenticatedRequest
 });
 
 // ==========================================
-// 11. SECURE ADMIN ROUTE
+// 11. PUBLIC USAGE COUNTER & ADMIN ROUTE
 // ==========================================
+
+apiRouter.get('/stats/usage', (_req, res: Response) => {
+  return res.json(db.getPublicUsageStats());
+});
 
 apiRouter.get('/admin/stats', requireAdmin, (req: AuthenticatedRequest, res: Response) => {
   const stats = db.getSystemStats();
-  const allUsers = db.getAllUsers().map((u) => {
-    const { password_hash: _, ...safe } = u;
-    return safe;
-  });
+  const allUsers = db
+    .getAllUsers()
+    .map((u) => {
+      const { password_hash: _, ...safe } = u;
+      return safe;
+    })
+    .sort((a, b) => {
+      const ta = new Date(a.last_active_at || a.created_at).getTime();
+      const tb = new Date(b.last_active_at || b.created_at).getTime();
+      return tb - ta;
+    });
 
   return res.json({
     stats,

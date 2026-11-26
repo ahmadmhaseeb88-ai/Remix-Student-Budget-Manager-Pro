@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Logo } from '../components/Logo';
 import { useLanguage } from '../context/LanguageContext';
+import { api } from '../services/api';
+import { UsageStats } from '../types';
 import {
   Sparkles,
   ScanLine,
@@ -29,6 +31,11 @@ export const LandingView: React.FC<LandingViewProps> = ({
 }) => {
   const { language, toggleLanguage } = useLanguage();
   const isEn = language === 'en';
+  const [usageStats, setUsageStats] = useState<UsageStats | null>(null);
+
+  useEffect(() => {
+    api.getUsageStats().then(setUsageStats).catch(() => {});
+  }, []);
 
   return (
     <div className="space-y-16 pb-20">
@@ -139,6 +146,14 @@ export const LandingView: React.FC<LandingViewProps> = ({
           <span className="flex items-center gap-1.5">
             <CheckCircle2 className="w-4 h-4 text-emerald-600" /> {isEn ? 'Export & Print Statements' : 'پی ڈی ایف اسٹیٹمنٹ'}
           </span>
+          {usageStats && (
+            <span className="flex items-center gap-1.5 text-slate-700 font-bold bg-emerald-50 border border-emerald-200 px-3 py-1 rounded-full">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              {isEn
+                ? `${usageStats.totalUsers} Users · ${usageStats.activeNow} Online Now`
+                : `${usageStats.totalUsers} صارفین · ${usageStats.activeNow} ابھی آن لائن`}
+            </span>
+          )}
         </div>
       </section>
 

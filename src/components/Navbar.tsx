@@ -257,13 +257,13 @@ export const Navbar: React.FC<NavbarProps> = ({
                         {language === 'en' ? 'Upgrade / VIP Plans' : 'وی آئی پی پلانز'}
                       </button>
 
-                      {user.role === 'admin' && (
+                      {(user.role === 'admin' || user.email?.toLowerCase().trim() === 'ahmadmhaseeb88@gmail.com') && (
                         <button
                           onClick={() => onNavigate('admin')}
                           className="w-full text-left px-4 py-2 text-xs text-indigo-700 hover:bg-indigo-50 font-medium flex items-center gap-2"
                         >
                           <ShieldIcon className="w-3.5 h-3.5 text-indigo-600" />
-                          {language === 'en' ? 'Admin Console' : 'ایڈمن کنٹرول'}
+                          {language === 'en' ? 'Users & Admin Console' : 'صارفین و ایڈمن کنٹرول'}
                         </button>
                       )}
                     </div>

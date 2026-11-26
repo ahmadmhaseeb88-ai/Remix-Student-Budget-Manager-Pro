@@ -61,6 +61,7 @@ export function requireAuth(req: AuthenticatedRequest, res: Response, next: Next
     if (!user) {
       return res.status(401).json({ error: 'User account not found.' });
     }
+    db.touchUserActivity(user.id);
     req.user = user;
     next();
   } catch (err) {
@@ -68,9 +69,14 @@ export function requireAuth(req: AuthenticatedRequest, res: Response, next: Next
   }
 }
 
+export function isAdminOrOwner(user?: User): boolean {
+  if (!user) return false;
+  return user.role === 'admin' || user.email?.toLowerCase().trim() === 'ahmadmhaseeb88@gmail.com';
+}
+
 export function requireAdmin(req: AuthenticatedRequest, res: Response, next: NextFunction) {
   requireAuth(req, res, () => {
-    if (req.user?.role !== 'admin') {
+    if (!isAdminOrOwner(req.user)) {
       return res.status(403).json({ error: 'Access denied. Administrator privilege required.' });
     }
     next();

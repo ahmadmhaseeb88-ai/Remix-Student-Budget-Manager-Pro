@@ -13,7 +13,17 @@ export interface User {
   plan_expires_at?: string;
   phone_number?: string;
   sms_webhook_token?: string;
+  last_active_at?: string;
   created_at: string;
+}
+
+export interface UsageStats {
+  totalUsers: number;
+  activeNow: number;
+  activeToday: number;
+  newToday: number;
+  totalTransactions: number;
+  totalFamilyHubs: number;
 }
 
 export interface SmsLog {

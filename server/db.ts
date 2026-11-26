@@ -20,6 +20,7 @@ export interface User {
   plan_expires_at?: string;
   phone_number?: string;
   sms_webhook_token?: string;
+  last_active_at?: string;
   created_at: string;
 }
 
@@ -1064,6 +1065,18 @@ class DatabaseStore {
     return this.data.users[idx];
   }
 
+  public touchUserActivity(id: string): void {
+    const idx = this.data.users.findIndex((u) => u.id === id);
+    if (idx === -1) return;
+    const prev = this.data.users[idx].last_active_at;
+    const nowMs = Date.now();
+    const prevMs = prev ? new Date(prev).getTime() : 0;
+    if (!prev || isNaN(prevMs) || nowMs - prevMs >= 60 * 1000) {
+      this.data.users[idx].last_active_at = new Date(nowMs).toISOString();
+      this.persist();
+    }
+  }
+
   public deleteUser(id: string): boolean {
     this.data.users = this.data.users.filter((u) => u.id !== id);
     this.data.transactions = this.data.transactions.filter((t) => t.user_id !== id);
@@ -1458,10 +1471,45 @@ class DatabaseStore {
     return deleted;
   }
 
-  // System Stats for Admin
-  public getSystemStats() {
+  public getPublicUsageStats() {
+    const now = Date.now();
+    const fifteenMinAgo = now - 15 * 60 * 1000;
+    const oneDayAgo = now - 24 * 60 * 60 * 1000;
+    const todayPrefix = new Date(now).toISOString().split('T')[0];
+
+    let activeNow = 0;
+    let activeToday = 0;
+    let newToday = 0;
+
+    for (const u of this.data.users) {
+      const lastActiveMs = u.last_active_at ? new Date(u.last_active_at).getTime() : 0;
+      if (lastActiveMs >= fifteenMinAgo) activeNow++;
+      if (lastActiveMs >= oneDayAgo || (u.created_at && u.created_at.startsWith(todayPrefix))) {
+        activeToday++;
+      }
+      if (u.created_at && u.created_at.startsWith(todayPrefix)) {
+        newToday++;
+      }
+    }
+
     return {
       totalUsers: this.data.users.length,
+      activeNow,
+      activeToday,
+      newToday,
+      totalTransactions: this.data.transactions.length,
+      totalFamilyHubs: this.data.family_groups.length,
+    };
+  }
+
+  // System Stats for Admin
+  public getSystemStats() {
+    const usage = this.getPublicUsageStats();
+    return {
+      totalUsers: usage.totalUsers,
+      activeNow: usage.activeNow,
+      activeToday: usage.activeToday,
+      newToday: usage.newToday,
       activeStudents: this.data.users.filter((u) => u.role === 'student').length,
       paidSubscriptions: this.data.users.filter((u) => u.plan === 'premium' || u.plan === 'pro').length,
       totalTransactionsRecorded: this.data.transactions.length,

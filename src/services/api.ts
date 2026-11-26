@@ -11,6 +11,7 @@ import {
   SubscriptionPlan,
   SmsLog,
   FamilyHubResponse,
+  UsageStats,
 } from '../types';
 
 const TOKEN_KEY = 'budget_pro_token';
@@ -382,7 +383,11 @@ export const api = {
     });
   },
 
-  // Admin
+  // Public Usage Counter & Admin
+  async getUsageStats(): Promise<UsageStats> {
+    return this.request<UsageStats>('/stats/usage');
+  },
+
   async getAdminStats(): Promise<any> {
     return this.request<any>('/admin/stats');
   },

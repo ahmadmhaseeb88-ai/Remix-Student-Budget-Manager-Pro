@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { DashboardSummary, User, Transaction } from '../types';
+import { DashboardSummary, User, Transaction, UsageStats } from '../types';
 import { api } from '../services/api';
 import { useLanguage } from '../context/LanguageContext';
 import {
@@ -53,6 +53,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   const isEn = language === 'en';
 
   const [summary, setSummary] = useState<DashboardSummary | null>(null);
+  const [usageStats, setUsageStats] = useState<UsageStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedMonth, setSelectedMonth] = useState<string>(() => {
@@ -103,8 +104,12 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
     setLoading(true);
     setError(null);
     try {
-      const data = await api.getDashboardSummary(month);
+      const [data, usage] = await Promise.all([
+        api.getDashboardSummary(month),
+        api.getUsageStats().catch(() => null),
+      ]);
       setSummary(data);
+      if (usage) setUsageStats(usage);
     } catch (err: any) {
       setError(err.message || 'Failed to load dashboard data');
     } finally {
@@ -372,6 +377,44 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           </button>
         </div>
       </div>
+
+      {/* Live App Users & Activity Counter */}
+      {usageStats && (
+        <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-3 rounded-2xl bg-white border border-slate-200/90 shadow-2xs">
+          <div className="flex flex-wrap items-center gap-4 text-xs">
+            <div className="flex items-center gap-2 font-bold text-slate-900">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              <Users className="w-4 h-4 text-indigo-600" />
+              <span>{isEn ? 'App Users:' : 'ایپ صارفین:'}</span>
+              <span className="px-2 py-0.5 rounded-lg bg-indigo-50 text-indigo-700 font-extrabold">
+                {usageStats.totalUsers} {isEn ? 'Total' : 'کل'}
+              </span>
+            </div>
+            <div className="text-slate-600 font-semibold">
+              <span className="text-emerald-700 font-extrabold">{usageStats.activeNow}</span>{' '}
+              {isEn ? 'Online Now' : 'ابھی آن لائن'}
+            </div>
+            <div className="text-slate-600 font-semibold">
+              <span className="text-slate-900 font-extrabold">{usageStats.activeToday}</span>{' '}
+              {isEn ? 'Active Today' : 'آج فعال'}
+            </div>
+            <div className="text-slate-600 font-semibold">
+              <span className="text-emerald-700 font-extrabold">+{usageStats.newToday}</span>{' '}
+              {isEn ? 'New Today' : 'آج نئے'}
+            </div>
+          </div>
+
+          {(user.role === 'admin' || user.email?.toLowerCase().trim() === 'ahmadmhaseeb88@gmail.com') && (
+            <button
+              onClick={() => onNavigate('admin')}
+              className="text-xs font-bold text-indigo-600 hover:text-indigo-800 flex items-center gap-1"
+            >
+              <span>{isEn ? 'View All Users' : 'تمام صارفین دیکھیں'}</span>
+              <ChevronRight className="w-3.5 h-3.5" />
+            </button>
+          )}
+        </div>
+      )}
 
       {/* 2. THE BIG 3 STATS: PEHLA INCOME, EXPENSE, AUR SAVINGS (PROMINENT AT THE VERY TOP!) */}
       {summary && (

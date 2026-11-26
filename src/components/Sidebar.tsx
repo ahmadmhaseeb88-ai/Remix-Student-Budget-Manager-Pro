@@ -102,11 +102,15 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeView, onNavigate, user }
     },
   ];
 
-  if (user.role === 'admin') {
+  const isAdminOrOwner =
+    user.role === 'admin' || user.email?.toLowerCase().trim() === 'ahmadmhaseeb88@gmail.com';
+
+  if (isAdminOrOwner) {
     navItems.push({
       id: 'admin',
-      label: isEn ? 'Admin Console' : 'ایڈمن کنٹرول',
+      label: isEn ? 'Users & Admin' : 'صارفین و ایڈمن',
       icon: ShieldCheck,
+      badge: isEn ? 'Live' : 'لائیو',
     });
   }
 
