@@ -159,8 +159,22 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         {/* Modal Body */}
         <div className="p-6 overflow-y-auto flex-1">
           {error && (
-            <div className="mb-4 p-3 rounded-xl bg-rose-50 border border-rose-100 text-rose-700 text-xs font-medium">
-              {error}
+            <div className="mb-4 p-3 rounded-xl bg-rose-50 border border-rose-100 text-rose-700 text-xs font-medium space-y-1.5">
+              <div>{error}</div>
+              {mode === 'login' && loginEmail.trim() && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setError(null);
+                    setFormData((prev) => ({ ...prev, email: loginEmail.trim().toLowerCase() }));
+                    setMode('register');
+                    setStep(1);
+                  }}
+                  className="text-[11px] font-bold text-indigo-700 hover:underline block"
+                >
+                  New student? Create an account with {loginEmail.trim()} →
+                </button>
+              )}
             </div>
           )}
 
@@ -241,7 +255,11 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                     <label className="text-xs font-semibold text-slate-700">Password</label>
                     <button
                       type="button"
-                      onClick={() => setMode('forgot')}
+                      onClick={() => {
+                        setError(null);
+                        setSuccessMessage(null);
+                        setMode('forgot');
+                      }}
                       className="text-[11px] text-indigo-600 hover:underline"
                     >
                       Forgot?

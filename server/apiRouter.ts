@@ -44,7 +44,12 @@ apiRouter.post('/auth/register', (req, res) => {
     return res.status(400).json({ error: 'Name, email, and password are required.' });
   }
 
-  if (password.length < 6) {
+  const normalizedEmail = String(email).trim().toLowerCase();
+  if (!/^\S+@\S+\.\S+$/.test(normalizedEmail)) {
+    return res.status(400).json({ error: 'Please enter a valid email address.' });
+  }
+
+  if (String(password).length < 6) {
     return res.status(400).json({ error: 'Password must be at least 6 characters long.' });
   }
 
@@ -52,7 +57,7 @@ apiRouter.post('/auth/register', (req, res) => {
     return res.status(400).json({ error: 'Passwords do not match.' });
   }
 
-  const existing = db.findUserByEmail(email);
+  const existing = db.findUserByEmail(normalizedEmail);
   if (existing) {
     return res.status(400).json({ error: 'An account with this email already exists.' });
   }
@@ -61,9 +66,9 @@ apiRouter.post('/auth/register', (req, res) => {
   const password_hash = bcrypt.hashSync(password, salt);
 
   const newUser: User = {
-    id: `usr_${Date.now()}_${Math.random().toString(36).substr(2, 6)}`,
-    name: name.trim(),
-    email: email.trim().toLowerCase(),
+    id: `usr_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
+    name: String(name).trim(),
+    email: normalizedEmail,
     password_hash,
     student_id: student_id ? String(student_id).trim() : undefined,
     university: university ? String(university).trim() : 'Personal & Business',
@@ -80,7 +85,7 @@ apiRouter.post('/auth/register', (req, res) => {
 
   // Initialize a default overall budget for the student
   db.createBudget({
-    id: `bg_${Date.now()}`,
+    id: `bg_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
     user_id: newUser.id,
     category: 'Overall',
     period: 'monthly',

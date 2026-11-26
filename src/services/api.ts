@@ -73,7 +73,12 @@ export const api = {
       try {
         data = JSON.parse(text);
       } catch {
-        data = { error: text?.slice(0, 150) || `HTTP ${response.status} ${response.statusText}` };
+        const looksLikeHtml = /<!doctype|<html/i.test(text || '');
+        data = {
+          error: looksLikeHtml
+            ? `Service endpoint unavailable (${response.status}). Please refresh or try again.`
+            : text?.slice(0, 150) || `HTTP ${response.status} ${response.statusText}`,
+        };
       }
     }
 

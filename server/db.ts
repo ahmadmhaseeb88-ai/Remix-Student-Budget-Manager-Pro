@@ -1,6 +1,7 @@
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
+import { fileURLToPath } from 'url';
 import bcrypt from 'bcryptjs';
 
 export interface User {
@@ -206,7 +207,13 @@ export interface DatabaseSchema {
   family_goals: FamilySharedGoal[];
 }
 
-const BUNDLED_DATA_DIR = path.resolve(process.cwd(), 'data');
+const __dbFilename = fileURLToPath(import.meta.url);
+const __dbDirname = path.dirname(__dbFilename);
+const CWD_DATA_DIR = path.resolve(process.cwd(), 'data');
+const REL_DATA_DIR = path.resolve(__dbDirname, '..', 'data');
+const BUNDLED_DATA_DIR = fs.existsSync(path.join(CWD_DATA_DIR, 'budget_pro_db.json'))
+  ? CWD_DATA_DIR
+  : REL_DATA_DIR;
 const BUNDLED_DB_FILE = path.join(BUNDLED_DATA_DIR, 'budget_pro_db.json');
 
 function resolveWritableDataDir(): string {
@@ -520,6 +527,9 @@ class DatabaseStore {
 
   private persist() {
     try {
+      if (!fs.existsSync(DATA_DIR)) {
+        fs.mkdirSync(DATA_DIR, { recursive: true });
+      }
       fs.writeFileSync(DB_FILE, JSON.stringify(this.data, null, 2), 'utf-8');
     } catch (err) {
       console.error('Failed to write database file:', err);
@@ -1026,12 +1036,13 @@ class DatabaseStore {
 
   // User repository
   public findUserByEmail(email: string): User | undefined {
-    const norm = email.toLowerCase().trim();
+    const norm = String(email || '').toLowerCase().trim();
+    if (!norm) return undefined;
     return this.data.users.find(
       (u) =>
-        u.email.toLowerCase() === norm ||
-        (norm === 'ahmadmhaseeb88@gmail.com' && (u.email.toLowerCase() === 'haseeb@gmail.com' || u.id === 'usr_haseeb_001')) ||
-        (norm === 'haseeb@gmail.com' && (u.email.toLowerCase() === 'ahmadmhaseeb88@gmail.com' || u.id === 'usr_haseeb_001'))
+        u.email.toLowerCase().trim() === norm ||
+        (norm === 'ahmadmhaseeb88@gmail.com' && (u.email.toLowerCase().trim() === 'haseeb@gmail.com' || u.id === 'usr_haseeb_001')) ||
+        (norm === 'haseeb@gmail.com' && (u.email.toLowerCase().trim() === 'ahmadmhaseeb88@gmail.com' || u.id === 'usr_haseeb_001'))
     );
   }
 

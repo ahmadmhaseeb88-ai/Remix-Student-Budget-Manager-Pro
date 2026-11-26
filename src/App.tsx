@@ -43,14 +43,52 @@ export default function App() {
   const [quickAddPrefill, setQuickAddPrefill] = useState<Partial<Transaction> | undefined>(undefined);
   const [voiceModalOpen, setVoiceModalOpen] = useState(false);
 
-  // Verify auth session on mount
+  // Verify auth session and handle direct login/register/view URLs on mount
   useEffect(() => {
+    const pathname = window.location.pathname.toLowerCase().replace(/\/+$/, '') || '/';
+    const params = new URLSearchParams(window.location.search);
+    const authParam = params.get('auth');
+    const viewParam = params.get('view');
+
+    const knownViews = new Set([
+      'dashboard',
+      'transactions',
+      'budgets',
+      'semester',
+      'goals',
+      'family',
+      'camscanner',
+      'sms',
+      'coach',
+      'bills',
+      'reports',
+      'subscriptions',
+      'admin',
+      'settings',
+    ]);
+
+    const normalizedPathView = pathname.replace(/^\//, '');
+    const requestedAuthMode =
+      authParam === 'register' || pathname === '/register' || pathname === '/signup' || pathname === '/auth/register'
+        ? 'register'
+        : authParam === 'login' || pathname === '/login' || pathname === '/signin' || pathname === '/auth/login'
+        ? 'login'
+        : null;
+
+    if (pathname !== '/' || authParam || viewParam) {
+      window.history.replaceState({}, '', '/');
+    }
+
     if (api.getToken()) {
       api
         .getMe()
         .then((res) => {
           setUser(res.user);
-          if (activeView === 'landing') {
+          if (viewParam && knownViews.has(viewParam)) {
+            setActiveView(viewParam);
+          } else if (knownViews.has(normalizedPathView)) {
+            setActiveView(normalizedPathView);
+          } else if (activeView === 'landing') {
             setActiveView('dashboard');
           }
         })
@@ -58,7 +96,17 @@ export default function App() {
           api.clearAuth();
           setUser(null);
           setActiveView('landing');
+          if (requestedAuthMode) {
+            setAuthModalMode(requestedAuthMode);
+            setAuthModalOpen(true);
+          }
         });
+    } else if (requestedAuthMode) {
+      setAuthModalMode(requestedAuthMode);
+      setAuthModalOpen(true);
+    } else if (knownViews.has(normalizedPathView) || (viewParam && knownViews.has(viewParam))) {
+      setAuthModalMode('login');
+      setAuthModalOpen(true);
     }
   }, []);
 
